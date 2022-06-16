@@ -61,7 +61,7 @@ public class StudentBean {
 			this.gender = gender;
 			this.phone = phone;
 			this.education = education;
-			this.setAttend(attend);
+			this.attend = attend;
 		}
 		@Override
 		public String toString() {
