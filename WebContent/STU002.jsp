@@ -98,56 +98,25 @@
 									value="${seeMoreList.dob}">
 							</div>
 						</div>
-					<fieldset class="row mb-4">
-						<div class="col-md-2"></div>
-						<legend class="col-form-label col-md-2 pt-0">Gender</legend>
-						<div class="col-md-4">
-							<!--  -->
-							<c:choose>
-								<c:when test="${empty data.gender}">
-
-									<div class="form-check-inline">
-										<input class="form-check-input" type="radio" name="gender"
-											id="gridRadios1" value="Male" checked="checked"> <label
-											class="form-check-label" for="gridRadios1">Male</label>
-									</div>
-									<div class="form-check-inline">
-										<input class="form-check-input" type="radio" name="gender"
-											id="gridRadios2" value="Female"> <label
-											class="form-check-label" for="gridRadios2">Female</label>
-									</div>
-									<!--  -->
-								</c:when>
-								<c:otherwise>
-									<c:if test="${seeMoreList.gender eq \"Male\"}">
-										<div class="form-check-inline">
-											<input class="form-check-input" type="radio" name="gender"
-												id="gridRadios1" value="Male" checked="checked"> <label
-												class="form-check-label" for="gridRadios1"> Male </label>
-										</div>
-										<div class="form-check-inline">
-											<input class="form-check-input" type="radio" name="gender"
-												id="gridRadios2" value="Female"> <label
-												class="form-check-label" for="gridRadios2">Female</label>
-										</div>
-									</c:if>
-
-									<c:if test="${seeMoreList.gender eq \"Female\"}">
-										<div class="form-check-inline">
-											<input class="form-check-input" type="radio" name="gender"
-												id="gridRadios1" value="Male"> <label
-												class="form-check-label" for="gridRadios1"> Male </label>
-										</div>
-										<div class="form-check-inline">
-											<input class="form-check-input" type="radio" name="gender"
-												id="gridRadios2" value="Female" checked="checked"> <label
-												class="form-check-label" for="gridRadios2">Female</label>
-										</div>
-									</c:if>
-								</c:otherwise>
-							</c:choose>
-						</div>
-					</fieldset>
+					 <fieldset class="row mb-4">
+                <div class="col-md-2"></div>
+                <legend class="col-form-label col-md-2 pt-0">Gender</legend>
+                <div class="col-md-4">
+                    <div class="form-check-inline">
+                        <input class="form-check-input" type="radio"  id="gridRadios1" value="Male" name = "gender"
+                            checked>
+                        <label class="form-check-label" for="gridRadios1">
+                            Male
+                        </label>
+                    </div>
+                    <div class="form-check-inline">
+                        <input class="form-check-input" type="radio"  id="gridRadios2" value="Female" name = "gender">
+                        <label class="form-check-label" for="gridRadios2">
+                            Female
+                        </label>
+                    </div>
+                </div>
+            </fieldset>
 						<div class="row mb-4">
 							<div class="col-md-2"></div>
 							<label for="phone" class="col-md-2 col-form-label">Phone</label>
@@ -156,20 +125,20 @@
 									value=" ${seeMoreList.phone}">
 							</div>
 						</div>
-						<div class="row mb-4">
-							<div class="col-md-2"></div>
-							<label for="education" class="col-md-2 col-form-label">Education</label>
-							<div class="col-md-4">
-								<select class="form-select" aria-label="Education"
-									id="education" name="education">
-									<option value="Bachelor of Information Technology">Bachelor
-										of Information Technology</option>
-									<option value="Diploma in IT">Diploma in IT</option>
-									<option value="Bachelor of Computer Science">Bachelor
-										of Computer Science</option>
-								</select>
-							</div>
-						</div>
+						
+						 <div class="row mb-4">
+                <div class="col-md-2"></div>
+                <label for="education" class="col-md-2 col-form-label">Education</label>
+                <div class="col-md-4">
+                    <select class="form-select" aria-label="Education" id="education" name = "education">
+                        <option  value="Bachelor of Information Technology" ${seeMoreList.education.equals("Bachelor of Information Technology") ? 'selected' : '' }>Bachelor of Information Technology</option>
+                        <option value="Diploma in IT" ${seeMoreList.education.equals("Diploma in IT") ? 'selected' : '' }>Diploma in IT</option>
+                        <option value="Bachelor of Computer Science" ${seeMoreList.education.equals("Bachelor of Computer Science") ? 'selected' : '' } >Bachelor of Computer Science</option>
+    
+                    </select>
+                </div>
+            </div>
+						
 						<fieldset class="row mb-4">
 							<div class="col-md-2"></div>
 							<legend class="col-form-label col-md-2 pt-0">Attend</legend>
@@ -200,7 +169,7 @@
 
 							<button type="submit" class="btn btn-secondary mb-2">Update</button>
 									
-									<a href="DeleteStuServlet?selectedStuId=${data.id }">									
+									<a href="DeleteStuServlet?selectedStuId=${seeMoreList.id }">									
 									<button type="button" class="btn btn-danger"
 										data-bs-toggle="modal" data-bs-target="#exampleModal">
 										<span>Delete</span>
