@@ -10,8 +10,10 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import student.model.StudentBean;
-import user.model.UserBean;
+import com.model.UserBean;
+
+import persistant.dao.UserDAO;
+import persistant.dto.UserResponseDTO;
 
 /**
  * Servlet implementation class LoginServlet
@@ -45,47 +47,41 @@ public class LoginServlet extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 
-		String uname = request.getParameter("uname");
+		String uid = request.getParameter("uid");
 		String upwd = request.getParameter("upwd");
 		UserBean userBean = new UserBean();
-		userBean.setName(uname);
+		userBean.setId(uid);
 		userBean.setPassword(upwd);
 
-		List<UserBean> userList = (List<UserBean>) request.getServletContext().getAttribute("userList");
-		if (userList == null) {
-			userList = new ArrayList<>();
-			UserBean user = new UserBean("USR_001", "Admin", "admin@gmail.com", "admin123", "admin123", "admin");
-			userList.add(user);
-			request.getServletContext().setAttribute("userList", userList);
-			
-			for(UserBean userInfo : userList) {
-				if(userInfo.getName().equals(uname)&& userInfo.getPassword().equals(upwd)) {
-					request.getSession().setAttribute("userInfo", userInfo);
-					request.getRequestDispatcher("MNU001.jsp").forward(request, response);				
-				}else {
-					request.setAttribute("error", "Email and password do not match");
-					request.setAttribute("data", user);
-					request.getRequestDispatcher("LGN001.jsp").include(request, response);					
-				}
+		// List<UserBean> userList = (List<UserBean>)
+		// request.getServletContext().getAttribute("userList");
+		UserDAO dao = new UserDAO();
+		ArrayList<UserResponseDTO> userResList = dao.selectAllUser();
+
+		for (UserResponseDTO userInfo : userResList) {
+			if (userInfo.getUid().equals(uid) && userInfo.getPassword().equals(upwd)) {
+				request.getSession().setAttribute("userInfo", userInfo);
+				request.getRequestDispatcher("MNU001.jsp").forward(request, response);
+			} else {
+				request.setAttribute("msg", "Email and password do not match");
+				request.setAttribute("data", userBean);
+				request.getRequestDispatcher("LGN001.jsp").include(request, response);
 			}
-			
-			
-	/*		Iterator<UserBean> itr = userList.iterator();
-			while (itr.hasNext()) {
-				if (itr.next().getName().equals(uname) && itr.next().getPassword().equals(upwd)) {
-					String userName = itr.next().getName();
-					request.getSession().setAttribute("loginUserName", userName);
-					request.getRequestDispatcher("MNU001.jsp").forward(request, response);
-
-				} else {
-					request.setAttribute("error", "Email and password do not match");
-					request.setAttribute("data", user);
-					request.getRequestDispatcher("LGN001.jsp").include(request, response);
-
-				}*/
-			}
-
 		}
+
+		/*
+		 * Iterator<UserBean> itr = userList.iterator(); while (itr.hasNext()) { if
+		 * (itr.next().getName().equals(uname) && itr.next().getPassword().equals(upwd))
+		 * { String userName = itr.next().getName();
+		 * request.getSession().setAttribute("loginUserName", userName);
+		 * request.getRequestDispatcher("MNU001.jsp").forward(request, response);
+		 * 
+		 * } else { request.setAttribute("error", "Email and password do not match");
+		 * request.setAttribute("data", user);
+		 * request.getRequestDispatcher("LGN001.jsp").include(request, response);
+		 * 
+		 * }
+		 */
 	}
 
-
+}

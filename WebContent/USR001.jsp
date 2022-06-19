@@ -73,7 +73,7 @@
 		</div>
 		<div class="main_contents">
 			<div id="sub_content">
-			<div style="color: red;">${error }</div>			
+			<div style="color: red;">${msg }</div>			
 				<form action="RegisterUserServlet" method="post">
 					<h2 class="col-md-6 offset-md-2 mb-5 mt-4">User Registration</h2>
 					
@@ -129,10 +129,10 @@
 								<div class="col-md-6">
 									<button type="submit" class="btn btn-secondary col-md-2" id="btnAdd"
 										data-bs-toggle="modal" data-bs-target="#exampleModal">Add</button>
-										
+										</div>
 
 										
-							<div class="modal fade" id="exampleModal" tabindex="-1"
+			<!-- 				<div class="modal fade" id="exampleModal" tabindex="-1"
 								aria-labelledby="exampleModalLabel" aria-hidden="true">
 								<div class="modal-dialog modal-dialog-centered">
 									<div class="modal-content">
@@ -150,12 +150,11 @@
 										<div class="modal-footer">
 											<button type="button" class="btn btn-success col-md-2"
 												data-bs-dismiss="modal">Ok</button>
-
 										</div>
 									</div>
 								</div>
 							</div>
-
+ -->
 						</div>
 				</form>
 			</div>

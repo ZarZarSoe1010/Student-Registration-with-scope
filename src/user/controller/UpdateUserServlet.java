@@ -11,7 +11,11 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import user.model.UserBean;
+import com.model.UserBean;
+
+import persistant.dao.UserDAO;
+import persistant.dto.UserRequestDTO;
+import persistant.dto.UserResponseDTO;
 
 /**
  * Servlet implementation class UserUpdateServlet
@@ -34,62 +38,20 @@ public class UpdateUserServlet extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		
-		
-		/*
-		for (UserBean user : userList) {
-			System.out.println(user.toString());
-		}
-			List<UserBean> searchUserList = new ArrayList<>();
-		for(UserBean user : userList) {
-			if(user.getId().equals(id) || user.getName().equals(name)) {
-				searchUserList.add(user);
-			}
-		}
-		for (UserBean user : searchUserList) {
-			System.out.println(user.toString());
-		}
-
-		boolean b = false;
-		if (id.isEmpty() && name.isEmpty()) {
-			request.getSession().setAttribute("userList", userList);
-		} else {
-			for (UserBean user : userList) {
-				if (user.getId().equals(id) || user.getName().equals(name)) {
-					b = true;
-					searchUserList.add(user);
-
-				}
-
-			}*/
-//			Iterator <UserBean>itr=userList.iterator();
-//			while(itr.hasNext()) {
-//				if(itr.next().getId().equals(id) || itr.next().getName().equals(name)) {
-//					b=true;				
-//					searchUserList.add(itr.next());
-//				}			
-//			}
-		/*
-		 * if(searchUserList.size() == 0) {
-		 * request.getServletContext().setAttribute("userList", userList);
-		 * request.getRequestDispatcher("USR003.jsp").forward(request, response); } else
-		 * { request.getServletContext().setAttribute("userList", searchUserList);
-		 * request.getRequestDispatcher("USR003.jsp").forward(request, response); }
-		 */
-//			request.getServletContext().setAttribute("userList", searchUserList);
-//			if (b == false) {
-//				request.setAttribute("error", "User Not Found!!");
-//			}
-//		}
-//		request.getRequestDispatcher("USR003.jsp").forward(request, response);
-	/*
-	 * } 
-	 */
+		String selectedUserId=request.getParameter("selectedUserId");
+		UserDAO dao = new UserDAO();
+		UserResponseDTO userRes=dao.selectOneUser(selectedUserId);
+		UserBean userBean=new UserBean();
+		userBean.setId(selectedUserId);
+		userBean.setName(userRes.getName());
+		userBean.setEmail(userRes.getEmail());
+		userBean.setPassword(userRes.getPassword());
+		userBean.setCpwd(userRes.getCpwd());
+		userBean.setUserRole(userRes.getUserRole());	
+		request.setAttribute("userBean", userBean);
+		request.getRequestDispatcher("USR002.jsp").forward(request, response);
 	}
-	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse
-	 *      response)
-	 */
+
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		String id = request.getParameter("id");
@@ -100,22 +62,28 @@ public class UpdateUserServlet extends HttpServlet {
 		String userRole = request.getParameter("userRole");
 		UserBean userBean = new UserBean(id, name, email, password, cpwd, userRole);
 
-		if (name.equals("") || email.equals("") || password.equals("") || cpwd.equals("") || userRole.equals("")) {
+		if (name.isEmpty() || email.isEmpty() || password.isEmpty() || cpwd.isEmpty() || userRole.isEmpty()) {
 			request.setAttribute("error", "Field can not be BLANK!!");
 			request.setAttribute("userBean", userBean);
 		} else {
-			List<UserBean> userList = (List<UserBean>) request.getServletContext().getAttribute("userList");
-			Iterator<UserBean> itr = userList.iterator();
-			while (itr.hasNext()) {
-				if (itr.next().getId().equals(id)) {
-					itr.remove();
-				}
+			UserDAO dao = new UserDAO();
+			UserRequestDTO dto = new UserRequestDTO();
+			dto.setUid(id);
+			dto.setName(name);
+			dto.setEmail(email);
+			dto.setPassword(password);
+			dto.setCpwd(cpwd);
+			dto.setUserRole(userRole);
+			int i = dao.updateUser(dto);
+			if (i > 0) {
+				request.setAttribute("msg", "Update Successful!!");
+			} else {
+				request.setAttribute("msg", "Update Fail!");
+				request.setAttribute("userBean", userBean);
 			}
-			userList.add(userBean);
-			request.setAttribute("error", "Update Successful!!");
-			request.getServletContext().setAttribute("userList", userList);
 		}
 		request.getRequestDispatcher("USR002.jsp").forward(request, response);
+
 
 	}
 

@@ -67,10 +67,9 @@
 		</div>
 		<div class="main_contents">
 			<div id="sub_content">
-				<div style="color: red;">${error }</div>
+				<div style="color: blue;">${msg }</div>
 
 				<form action="UpdateStuServlet" method="post">
-					<c:forEach items="${stuList}" var="seeMoreList">
 						<h2 class="col-md-6 offset-md-2 mb-5 mt-4">Student Details</h2>
 						<div class="row mb-4">
 							<div class="col-md-2"></div>
@@ -78,7 +77,7 @@
 								ID</label>
 							<div class="col-md-4">
 								<input type="text" class="form-control" id="studentID" name="id"
-									value="${seeMoreList.id}">
+									value="${studentInfo.id}">
 
 							</div>
 						</div>
@@ -87,7 +86,7 @@
 							<label for="name" class="col-md-2 col-form-label">Name</label>
 							<div class="col-md-4">
 								<input type="text" class="form-control" id="name" name="name"
-									value="${seeMoreList.name }">
+									value="${studentInfo.name }">
 							</div>
 						</div>
 						<div class="row mb-4">
@@ -95,7 +94,7 @@
 							<label for="dob" class="col-md-2 col-form-label">DOB</label>
 							<div class="col-md-4">
 								<input type="date" class="form-control" id="dob" name="dob"
-									value="${seeMoreList.dob}">
+									value="${studentInfo.dob}">
 							</div>
 						</div>
 					 <fieldset class="row mb-4">
@@ -104,13 +103,14 @@
                 <div class="col-md-4">
                     <div class="form-check-inline">
                         <input class="form-check-input" type="radio"  id="gridRadios1" value="Male" name = "gender"
-                            checked>
+                            ${studentInfo.gender.equals("Male") ? 'checked' : '' }>
                         <label class="form-check-label" for="gridRadios1">
                             Male
                         </label>
                     </div>
                     <div class="form-check-inline">
-                        <input class="form-check-input" type="radio"  id="gridRadios2" value="Female" name = "gender">
+                        <input class="form-check-input" type="radio"  id="gridRadios2" value="Female" name = "gender"
+                        ${studentInfo.gender.equals("Female") ? 'checked' : '' }>
                         <label class="form-check-label" for="gridRadios2">
                             Female
                         </label>
@@ -122,7 +122,7 @@
 							<label for="phone" class="col-md-2 col-form-label">Phone</label>
 							<div class="col-md-4">
 								<input type="text" class="form-control" id="phone" name="phone"
-									value=" ${seeMoreList.phone}">
+									value=" ${studentInfo.phone}">
 							</div>
 						</div>
 						
@@ -131,9 +131,9 @@
                 <label for="education" class="col-md-2 col-form-label">Education</label>
                 <div class="col-md-4">
                     <select class="form-select" aria-label="Education" id="education" name = "education">
-                        <option  value="Bachelor of Information Technology" ${seeMoreList.education.equals("Bachelor of Information Technology") ? 'selected' : '' }>Bachelor of Information Technology</option>
-                        <option value="Diploma in IT" ${seeMoreList.education.equals("Diploma in IT") ? 'selected' : '' }>Diploma in IT</option>
-                        <option value="Bachelor of Computer Science" ${seeMoreList.education.equals("Bachelor of Computer Science") ? 'selected' : '' } >Bachelor of Computer Science</option>
+                        <option  value="Bachelor of Information Technology" ${studentInfo.education.equals("Bachelor of Information Technology") ? 'selected' : '' }>Bachelor of Information Technology</option>
+                        <option value="Diploma in IT" ${studentInfo.education.equals("Diploma in IT") ? 'selected' : '' }>Diploma in IT</option>
+                        <option value="Bachelor of Computer Science" ${studentInfo.education.equals("Bachelor of Computer Science") ? 'selected' : '' } >Bachelor of Computer Science</option>
     
                     </select>
                 </div>
@@ -143,13 +143,13 @@
 							<div class="col-md-2"></div>
 							<legend class="col-form-label col-md-2 pt-0">Attend</legend>
 							<div class="col-md-4">
-								<c:forEach items="${applicationScope.courseList}" var="data">
+								<c:forEach items="${studentInfo.attend}" var="data">
 									<div class="form-check-inline col-md-2">
 										<input class="form-check-input" type="checkbox" name="attend"
-											id=" ${data.cid}" value=" ${data.cname}"
-											${seeMoreList.attend.contains(data.cname)? 'checked' : '' } />
+											id=" ${data.id}" value=" ${data.id}"
+											${studentInfo.stuCourse.contains(data.name)? 'checked' : '' } />
 										<label class="form-check-label" for="gridRadios1">
-											${data.cname} </label>
+											${data.name} </label>
 									</div>
 								</c:forEach>
 							</div>
@@ -169,7 +169,7 @@
 
 							<button type="submit" class="btn btn-secondary mb-2">Update</button>
 									
-									<a href="DeleteStuServlet?selectedStuId=${seeMoreList.id }">									
+									<a href="DeleteStuServlet?selectedStuId=${studentInfo.id }">									
 									<button type="button" class="btn btn-danger"
 										data-bs-toggle="modal" data-bs-target="#exampleModal">
 										<span>Delete</span>
@@ -177,7 +177,7 @@
 								</a>
 
 								<!-- Modal -->
-								<div class="modal fade" id="exampleModal" tabindex="-1"
+								<!-- <div class="modal fade" id="exampleModal" tabindex="-1"
 									aria-labelledby="exampleModalLabel" aria-hidden="true">
 									<div class="modal-dialog modal-dialog modal-dialog-centered">
 										<div class="modal-content">
@@ -196,11 +196,10 @@
 											</div>
 										</div> 
 									</div>
-								</div> 
+								</div>  -->
 							</div>
 
 						</div>
-					</c:forEach>
 				</form>
 			</div>
 		</div>
