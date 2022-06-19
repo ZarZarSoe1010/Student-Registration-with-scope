@@ -12,7 +12,13 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import student.model.StudentBean;
+import com.model.CourseBean;
+import com.model.StudentBean;
+
+import persistant.dao.CourseDAO;
+import persistant.dao.StudentDAO;
+import persistant.dto.CourseResponseDTO;
+import persistant.dto.StudentRequestDTO;
 
 /**
  * Servlet implementation class UpdateStuServlet
@@ -53,22 +59,50 @@ public class UpdateStuServlet extends HttpServlet {
 		String education = request.getParameter("education");
 		List<String> attend = new ArrayList<>();
 		Collections.addAll(attend, request.getParameterValues("attend"));
-		StudentBean stuBean = new StudentBean(id, name, dob, gender, phone, education, attend);
+		StudentBean stuBean = new StudentBean(id, name, dob, gender, phone, education);
 
-		if (name.equals("") || dob.equals("") || gender.equals("") || phone.equals("") || education.equals("")
-				|| attend.equals("")) {
-			request.setAttribute("error", " Fields can not be BLANK!!");
+		if (name.isEmpty() || dob.isEmpty() || gender.isEmpty() || phone.isEmpty() || education.isEmpty()
+				|| attend.size()==0) {
+			request.setAttribute("msg", " Fields can not be BLANK!!");
 			request.setAttribute("stuBean", stuBean);
+			request.getRequestDispatcher("STU003.jsp").forward(request, response);
 		} else {
-			List<StudentBean> stuList = (List<StudentBean>) request.getServletContext().getAttribute("stuList");
-			Iterator<StudentBean> itr = stuList.iterator();
-			while (itr.hasNext()) {
-				if (itr.next().getId().equals(id)) {
-					itr.remove();
-				}
+			StudentDAO dao = new StudentDAO();
+			StudentRequestDTO dto = new StudentRequestDTO();
+			dto.setSid(id);
+			dto.setName(name);
+			dto.setDob(dob);
+			dto.setGender(gender);
+			dto.setPhone(phone);
+			dto.setEducation(education);
+			int i = dao.updateStudent(dto);
+
+			if (i > 0) {
+				request.setAttribute("msg", " Update Successful!!!");
+				dao.deleteStudent_Course(id);
+				dao.insertStudent_Course(id,attend);
+			} else {
+				request.setAttribute("msg", "Update Fail!!");
 			}
-			stuList.add(stuBean);
-			request.getServletContext().setAttribute("stuList", stuList);
+			CourseDAO courseDao=new CourseDAO();
+			ArrayList<CourseResponseDTO>courseResList=courseDao.selectAll();
+			ArrayList<CourseBean>courseBeanList=new ArrayList<CourseBean>();
+			for(CourseResponseDTO course: courseResList) {
+				CourseBean courseBean=new CourseBean();
+				courseBean.setId(course.getCid());
+				courseBean.setName(course.getName());
+				courseBeanList.add(courseBean);
+			}
+			ArrayList<CourseResponseDTO>stuCourseResList=dao.selectCourseList(id);
+			ArrayList<String>stuCourseBeanList=new ArrayList<String>();
+			for(CourseResponseDTO course: stuCourseResList) {
+				stuCourseBeanList.add(course.getName());
+			}		
+			stuBean.setAttend(courseBeanList);
+			stuBean.setStuCourse(stuCourseBeanList);
+
+			
+			request.setAttribute("stuBean", stuBean);
 			response.sendRedirect("STU003.jsp");
 
 		}

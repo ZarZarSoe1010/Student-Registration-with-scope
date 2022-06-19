@@ -10,8 +10,11 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import student.model.StudentBean;
-import user.model.UserBean;
+import com.model.StudentBean;
+
+import persistant.dao.StudentDAO;
+import persistant.dto.StudentRequestDTO;
+
 
 /**
  * Servlet implementation class DeleteStuServlet
@@ -33,14 +36,14 @@ public class DeleteStuServlet extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String selectedStuId=request.getParameter("selectedStuId");
-		List<StudentBean> stuList=(List<StudentBean>) request.getServletContext().getAttribute("stuList");
-		Iterator <StudentBean>itr=stuList.iterator();
-		while(itr.hasNext()) {
-			if(itr.next().getId().equals(selectedStuId)) {
-				itr.remove();
-			}
-		}
-		request.getServletContext().setAttribute("stuList", stuList);
+		StudentDAO dao=new StudentDAO();
+		int i=dao.deleteStudent(selectedStuId);
+		dao.deleteStudent_Course(selectedStuId);
+		if(i>0) {
+			request.setAttribute("msg", "Deletesuccessful!");
+		}else {
+			request.setAttribute("msg", "Delete Fail!");
+		}		
 		response.sendRedirect("STU003.jsp");
 	}
 

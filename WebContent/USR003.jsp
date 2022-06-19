@@ -54,8 +54,9 @@
         </div>
         <a href="USR003.jsp  ">Users Management</a>
       </div>
-      <div class="main_contents">
+      <div class="main_contents">      
     <div id="sub_content">
+    			<div style="color: blue;">${msg }</div>			
         <form class="row g-3 mt-3 ms-2" action="SearchUserServlet" method="get">
             <div class="col-auto">
                 <label for="staticEmail2" class="visually-hidden">User Id</label>
@@ -94,8 +95,7 @@
 		                   <td>${data.name}</td>
 		                    
 		                <td>	                		           
-							<a href="USR002.jsp?selectedUserId=${data.id }&name=${data.name}&email=${data.email}&password=${data.password}&cpwd=${data.cpwd}
-						    		&userRole=${data.userRole}">	
+							<a href="UpdateUserServlet?selectedUserId=${data.id }">	
 						    			                	            
 		                    <button type="button" class="btn btn-success ">Update </button>
 		                    </a>
@@ -111,7 +111,7 @@
             </tbody>
         </table>
     
-        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+   <!--      <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -128,7 +128,7 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </div> -->
     </div>
 </div>
 </div>

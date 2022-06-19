@@ -29,7 +29,8 @@
         </div>  
         <div class="col-md-6">
             <p>User: ${userInfo.name}</p>
-            <p>Current Date : YY.MM.DD </p>
+            <p>Current Date :<%@page import="java.util.Date" %>
+                  	 		<%=new Date() %></p>
         </div>  
         <div class="col-md-1" >
             <input type="button" class="btn-basic" id="lgnout-button" value="Log Out" onclick="location.href='LGN001.jsp'">
@@ -70,7 +71,7 @@
             <div class="col-md-2"></div>
             <label for="name" class="col-md-2 col-form-label">Name</label>
             <div class="col-md-4">
-                <input type="text" class="form-control" id="name" name="cname"value="${courseBean.cname }">
+                <input type="text" class="form-control" id="name" name="cname"value="${courseBean.name}">
             </div>
         </div>
       

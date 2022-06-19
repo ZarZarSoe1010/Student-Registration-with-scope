@@ -16,12 +16,12 @@
 					<p>Please check your data again.</p>
 				</div>
 			</div>
-			    				<div style="color: red;">${error }</div>			
-			
+			<div style="color: blue;">${msg }</div>
+
 			<form class="login-form" action="LoginServlet" method="post"
 				name="confirm">
-				<input type="text" placeholder="User Name"  name="uname"value="" /> <input
-					type="password" placeholder="Password"  name="upwd"value="" />
+				<input type="text" placeholder="User Id" name="uid" value="${data.uid }" />
+				<input type="password" placeholder="Password" name="upwd" value="" />
 				<input type="submit" value="Login">
 				<p class="message">
 					Not registered? <a href="USR001.jsp">Create an account</a>

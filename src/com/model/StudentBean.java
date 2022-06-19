@@ -1,4 +1,4 @@
-package student.model;
+package com.model;
 
 import java.util.Arrays;
 import java.util.List;
@@ -10,7 +10,8 @@ public class StudentBean {
 		private String gender;
 		private String phone;
 		private String education;
-		private List<String> attend;
+		private List<CourseBean> attend;
+		private List<String> stuCourse;
 		public String getId() {
 			return id;
 		}
@@ -52,8 +53,7 @@ public class StudentBean {
 		public StudentBean() {
 			
 		}
-		public StudentBean(String id, String name, String dob, String gender, String phone, String education,
-				List<String> attend) {
+		public StudentBean(String id, String name, String dob, String gender, String phone, String education) {
 			super();
 			this.id = id;
 			this.name = name;
@@ -61,20 +61,26 @@ public class StudentBean {
 			this.gender = gender;
 			this.phone = phone;
 			this.education = education;
-			this.attend = attend;
+		
 		}
 		@Override
 		public String toString() {
 			return "id=" + id + ", name=" + name + ", dob=" + dob + ", gender=" + gender + ", phone="
 					+ phone + ", education=" + education ;
 		}
-		public List<String> getAttend() {
+		public List<CourseBean> getAttend() {
 			return attend;
 		}
-		public void setAttend(List<String> attend) {
+		public void setAttend(List<CourseBean> attend) {
 			this.attend = attend;
 		}
-		
+		public List<String> getStuCourse() {
+			return stuCourse;
+		}
+		public void setStuCourse(List<String> stuCourse) {
+			this.stuCourse = stuCourse;
+		}
+
 		
 
 

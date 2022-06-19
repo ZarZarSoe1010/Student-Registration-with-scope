@@ -1,17 +1,18 @@
-package user.model;
+package persistant.dto;
 
-public class UserBean {
-	private String id;
+public class UserResponseDTO {
+	private String uid;
 	private String name;
 	private String email;
 	private String password;
 	private String cpwd;
 	private String userRole;
-	public String getId() {
-		return id;
+	
+	public String getUid() {
+		return uid;
 	}
-	public void setId(String id) {
-		this.id = id;
+	public void setUid(String uid) {
+		this.uid = uid;
 	}
 	public String getName() {
 		return name;
@@ -43,12 +44,12 @@ public class UserBean {
 	public void setUserRole(String userRole) {
 		this.userRole = userRole;
 	}
-	public UserBean() {
+	public UserResponseDTO() {
 		
 	}
-	public UserBean(String id,String name, String email, String password, String cpwd, String userRole) {
+	public UserResponseDTO(String uid, String name, String email, String password, String cpwd, String userRole) {
 		super();
-		this.id = id;
+		this.uid = uid;
 		this.name = name;
 		this.email = email;
 		this.password = password;
@@ -57,11 +58,8 @@ public class UserBean {
 	}
 	@Override
 	public String toString() {
-		return "id="+id+"name=" + name + ", email=" + email + ", password=" + password + ", cpwd=" + cpwd
-				+ ", userRole=" + userRole + "]";
+		return "uid="+uid+"name=" + name + ", email=" + email + ", password=" + password + ", cpwd=" + cpwd
+				+ ", userRole=" + userRole ;
 	}
-	
-	
-	
 
 }

@@ -12,8 +12,14 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import classes.controller.CourseBean;
-import student.model.StudentBean;
+import com.model.CourseBean;
+import com.model.StudentBean;
+
+import persistant.dao.CourseDAO;
+import persistant.dao.StudentDAO;
+import persistant.dto.CourseResponseDTO;
+import persistant.dto.StudentRequestDTO;
+import persistant.dto.StudentResponseDTO;
 
 /**
  * Servlet implementation class RegisterStuServlet
@@ -36,9 +42,20 @@ public class RegisterStuServlet extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		int lastStudentId = GetLatestStudentId(request);
-		String id= "STU_"+String.format("%03d", lastStudentId + 1);
-		request.getServletContext().setAttribute("newStuId", id);
+		String newStuId = GetNewStudentId(request);
+		CourseDAO dao = new CourseDAO();
+		ArrayList<CourseResponseDTO> courseListRes = dao.selectAll();
+		ArrayList<CourseBean> courseListBean = new ArrayList<CourseBean>();
+		for (CourseResponseDTO courseRes : courseListRes) {
+			CourseBean courseBean = new CourseBean();
+			courseBean.setId(courseRes.getCid());
+			courseBean.setName(courseRes.getName());
+			courseListBean.add(courseBean);
+		}
+		StudentBean stuBean=new StudentBean();
+		stuBean.setId(newStuId);
+		stuBean.setAttend(courseListBean);
+		request.setAttribute("stuBean", stuBean);
 		request.getRequestDispatcher("STU001.jsp").forward(request, response);
 
 	}
@@ -55,44 +72,72 @@ public class RegisterStuServlet extends HttpServlet {
 		String gender = request.getParameter("gender");
 		String phone = request.getParameter("phone");
 		String education = request.getParameter("education");
-		List<String> attend=new ArrayList<>();	
-		Collections.addAll(attend, request.getParameterValues("attend"));		
-		StudentBean stuBean = new StudentBean(id, name, dob, gender, phone,education, attend);
+		List<String> attend = new ArrayList<>();
+		Collections.addAll(attend, request.getParameterValues("attend"));
+
+		StudentBean stuBean = new StudentBean(id, name, dob, gender, phone, education);
 		if (id.equals("") || name.equals("") || dob.equals("") || gender.equals("") || phone.equals("")
 				|| education.equals("") || attend.equals("")) {
-			request.setAttribute("error", " Fields can not be BLANK!!");
+			request.setAttribute("msg", " Fields can not be BLANK!!");
 			request.setAttribute("stuBean", stuBean);
 			request.getRequestDispatcher("STU001.jsp").forward(request, response);
 		} else {
-			List<StudentBean> stuList = (List<StudentBean>) request.getServletContext().getAttribute("stuList");
-			if (stuList == null) {
-				stuList = new ArrayList<StudentBean>();
+
+			StudentDAO dao = new StudentDAO();
+			StudentRequestDTO dto = new StudentRequestDTO();
+			dto.setSid(id);
+			dto.setName(name);
+			dto.setDob(dob);
+			dto.setGender(gender);
+			dto.setPhone(phone);
+			dto.setEducation(education);
+			int i = dao.insertStudent(dto);
+			if (i > 0) {
+				request.setAttribute("msg", " Register Successful!!!");
+				dao.insertStudent_Course(id, attend);
+				stuBean = new StudentBean();
+				String newStuId = GetNewStudentId(request);
+				stuBean.setId(newStuId);
+			} else {
+				request.setAttribute("msg", "Insert Fail!!");
 			}
-			stuList.add(stuBean);
-			request.getServletContext().setAttribute("stuList", stuList);
-			int lastStudentId = GetLatestStudentId(request);
-			String newId= "STU_"+String.format("%03d", lastStudentId + 1);
-			request.getServletContext().setAttribute("newStuId", newId);
+			ArrayList<CourseBean> courseBeanList = new ArrayList<CourseBean>();
+			CourseDAO courseDao = new CourseDAO();
+			ArrayList<CourseResponseDTO> courseResList = courseDao.selectAll();
+			for (CourseResponseDTO courseRes : courseResList) {
+				CourseBean courseBean = new CourseBean();
+				courseBean.setId(courseRes.getCid());
+				courseBean.setName(courseRes.getName());
+				courseBeanList.add(courseBean);
+			}
+			stuBean.setAttend(courseBeanList);
+			request.setAttribute("stuBean", stuBean);
 			request.getRequestDispatcher("STU001.jsp").forward(request, response);
-		} 
+		}
 	}
 
 	@SuppressWarnings("unchecked")
-	private int GetLatestStudentId(HttpServletRequest request) {
+	private String GetNewStudentId(HttpServletRequest request) {
 		int lastStuId = 0;
-		List<StudentBean> stuList=(List<StudentBean>) request.getServletContext().getAttribute("stuList");
-		if(stuList!=null){
-		Iterator <StudentBean>itr=stuList.iterator();
-		while(itr.hasNext()) {
-			String stuId = itr.next().getId() ;
-			int count=Integer.parseInt(stuId.split("_")[1]);
-					
-			if(count> lastStuId) {
-				lastStuId = count;
+		// List<StudentBean> stuList=(List<StudentBean>)
+		// request.getServletContext().getAttribute("stuList");
+		StudentDAO dao = new StudentDAO();
+		List<StudentResponseDTO> stuList = dao.selectAll();
+
+		if (stuList != null) {
+			Iterator<StudentResponseDTO> itr = stuList.iterator();
+			while (itr.hasNext()) {
+				String stuId = itr.next().getSid();
+				int count = Integer.parseInt(stuId.split("_")[1]);
+
+				if (count > lastStuId) {
+					lastStuId = count;
+				}
 			}
 		}
-		}
-		return lastStuId;			
+		String newStuId = "STU_" + String.format("%03d", lastStuId + 1);
+
+		return newStuId;
 	}
 
 }

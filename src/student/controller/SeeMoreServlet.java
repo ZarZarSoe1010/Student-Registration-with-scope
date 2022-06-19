@@ -11,8 +11,13 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import classes.controller.CourseBean;
-import student.model.StudentBean;
+import com.model.CourseBean;
+import com.model.StudentBean;
+
+import persistant.dao.CourseDAO;
+import persistant.dao.StudentDAO;
+import persistant.dto.CourseResponseDTO;
+import persistant.dto.StudentResponseDTO;
 
 /**
  * Servlet implementation class SeeMoreServlet
@@ -33,24 +38,38 @@ public class SeeMoreServlet extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse
 	 *      response)
 	 */
-	@SuppressWarnings("unchecked")
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 
 		String selectedStuId = request.getParameter("selectedStuId");
-		StudentBean stuBean = new StudentBean();	
-		List<StudentBean> stuList = (ArrayList<StudentBean>) request.getServletContext().getAttribute("stuList");
-		List<StudentBean> seeMoreList = new ArrayList<StudentBean>();
-			Iterator<StudentBean> itr = stuList.iterator();
-			while (itr.hasNext()) {
-				StudentBean stuBean1 = itr.next();
-//				List<String>list=Arrays.asList(stuBean1.getAttend());
-				if (  stuBean1.getId().equals(selectedStuId)) {
-					seeMoreList.add(stuBean1);
-				}
-			
-			request.setAttribute("stuList", seeMoreList);
+		StudentDAO dao=new StudentDAO();
+		CourseDAO courseDao=new CourseDAO();
+		StudentResponseDTO studentInfo=dao.selectOne(selectedStuId);
+		ArrayList<CourseResponseDTO>courseResList=courseDao.selectAll();
+		ArrayList<CourseBean>courseBeanList=new ArrayList<CourseBean>();
+		for(CourseResponseDTO course: courseResList) {
+			CourseBean courseBean=new CourseBean();
+			courseBean.setId(course.getCid());
+			courseBean.setName(course.getName());
+			courseBeanList.add(courseBean);
 		}
+		ArrayList<CourseResponseDTO>stuCourseResList=dao.selectCourseList(selectedStuId);;
+		ArrayList<String>stuCourseBeanList=new ArrayList<String>();
+		for(CourseResponseDTO course: stuCourseResList) {
+			stuCourseBeanList.add(course.getName());
+		}
+		StudentBean stuBean=new StudentBean();
+		stuBean.setId(selectedStuId);
+		stuBean.setName(studentInfo.getName());
+		stuBean.setDob(studentInfo.getDob());
+		stuBean.setGender(studentInfo.getGender());
+		stuBean.setPhone(studentInfo.getPhone());
+		stuBean.setEducation(studentInfo.getEducation());
+		stuBean.setAttend(courseBeanList);
+		stuBean.setStuCourse(stuCourseBeanList);
+
+		
+		request.setAttribute("studentInfo", stuBean);	
 		request.getRequestDispatcher("STU002.jsp").forward(request, response);
 
 	}

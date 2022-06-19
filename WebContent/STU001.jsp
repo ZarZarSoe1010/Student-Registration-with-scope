@@ -59,7 +59,7 @@
       </div>
       <div class="main_contents">
     <div id="sub_content">
-			<div style="color: red;">${error }</div>			
+			<div style="color: blue;">${msg }</div>			
         <form action="RegisterStuServlet" method="post">
 
             <h2 class="col-md-6 offset-md-2 mb-5 mt-4">Student Registration</h2>
@@ -67,7 +67,7 @@
                 <div class="col-md-2"></div>
                 <label for="studentID" class="col-md-2 col-form-label">Student ID</label>
                 <div class="col-md-4">
-                    <input type="text" class="form-control"  id="studentID"  name="id" value="${newStuId}" >
+                    <input type="text" class="form-control"  id="studentID"  name="id" value="${stuBean.id}" >
                 </div>
             </div>
             <div class="row mb-4">
@@ -125,13 +125,12 @@
             <fieldset class="row mb-4">
                 <div class="col-md-2"></div>
                 <legend class="col-form-label col-md-2 pt-0">Attend</legend>   
-                <div class="col-md-4">
-                
-                     <c:forEach items="${applicationScope.courseList}" var="data">              
+                <div class="col-md-4">            
+                     <c:forEach items="${stuBean.attend}" var="data">              
                     <div class="form-check-inline col-md-2">
-                        <input class="form-check-input" type="checkbox" name="attend" id=" ${data.cid}" value=" ${data.cname}">
+                        <input class="form-check-input" type="checkbox" name="attend" id=" ${data.id}" value="${data.id}">
                         <label class="form-check-label" for="gridRadios1">
-                           ${data.cname}
+                           ${data.name}
                         </label>
                     </div>
                       </c:forEach>                     
@@ -143,20 +142,17 @@
                 <div class="col-md-4">
                     <input type="file" class="form-control" id="name">
                 </div>
-            </div>
-    
+            </div>   
             <div class="row mb-4">
-                <div class="col-md-4"></div>
-    
+                <div class="col-md-4"></div>  
                 <div class="col-md-4">
-                    <button type="button" class="btn btn-danger ">
-    
+                    <button type="button" class="btn btn-danger ">  
                         Reset
                     </button>
                     <button type="submit" class="btn btn-secondary col-md-2" data-bs-toggle="modal" >
                         Add
                     </button>
-                    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+                    <!-- <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
                     aria-hidden="true">
                     <div class="modal-dialog modal-dialog-centered">
                         <div class="modal-content">
@@ -174,7 +170,7 @@
                             </div>
                         </div>
                     </div>
-            </div>
+            </div> -->
                 </div>
 
     
